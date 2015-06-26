@@ -263,11 +263,11 @@ class Twitter extends tmhOAuth {
 
 		if ($this->error)
 		{
-			$this->log('ERROR_CODE : '.$response['errorno']);
+			$this->log('ERROR_CODE : '.$response['errno']);
 			$this->log('ERROR_MSG : '.$response['error']);
 		}
 
-		if (isset($response['code']) && $response['code'] != 200)
+		if (isset($response['code']) && $response['code'] != 200 && $response['code'] != 0 )
 		{
 			$_response = $this->jsonDecode($response['response'], true);
 
@@ -286,6 +286,10 @@ class Twitter extends tmhOAuth {
 			$this->log('ERROR_MSG : '.$error_msg);
 
 			throw new Exception('['.$error_code.'] '.$error_msg, $response['code']);
+		}elseif($response['code'] === 0){
+
+			throw new Exception('['.$response['errno'].'] '.$response['error'], $response['code']);
+
 		}
 
 		switch ($format)
